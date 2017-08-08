@@ -1,6 +1,6 @@
 # recipe-app
 
-> Webapp for storing and managing recipes
+> Web app for storing and managing recipes
 
 ## Build Setup
 

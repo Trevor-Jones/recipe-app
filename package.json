@@ -1,7 +1,7 @@
 {
   "name": "recipe-app",
   "version": "1.0.0",
-  "description": "Webapp for storing and managing recipes",
+  "description": "Web app for storing and managing recipes",
   "author": "Trevor Jones <trevor.eric.j@gmail.com>",
   "private": true,
   "scripts": {
@@ -11,8 +11,11 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "firebase": "^4.2.0",
     "vue": "^2.3.3",
-    "vue-router": "^2.6.0"
+    "vue-router": "^2.6.0",
+    "vuefire": "^1.4.3",
+    "vuetify": "^0.14.8"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
