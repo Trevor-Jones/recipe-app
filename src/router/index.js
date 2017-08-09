@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import Homepage from '@/components/Homepage';
-import Homepage0 from '@/components/Homepage0';
+import RecipeView from '@/components/RecipeView';
 
 Vue.use(Router);
 
@@ -14,9 +14,9 @@ export default new Router({
       component: Homepage,
     },
     {
-      path: '/login',
-      name: 'Homepage0',
-      component: Homepage0,
+      path: '/recipes',
+      name: 'RecipeView',
+      component: RecipeView,
     },
   ],
 });

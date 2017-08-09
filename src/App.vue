@@ -84,7 +84,7 @@ export default {
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', path: '/' },
-        { title: 'About', icon: 'question_answer', path: '/login' }
+        { title: 'About', icon: 'question_answer', path: '/recipes' }
       ],
       right: null
     }
