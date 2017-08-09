@@ -5,10 +5,12 @@ import Vuetify from 'vuetify'
 import App from './App';
 import router from './router';
 
+
 Vue.use(Vuetify);
 Vue.config.productionTip = false;
 
 import 'vuetify/dist/vuetify.min.css';
+import './../static/font-awesome/css/font-awesome.min.css';
 
 /* eslint-disable no-new */
 new Vue({

@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <v-app id="example-3" standalone>
-      <v-navigation-drawer permanent clipped light>
+      <v-navigation-drawer permanent clipped light >
         <v-list dense class="pt-0">
           <v-list-tile v-for="item in items" :key="item.title" router exact :href='item.path'>
             <v-list-tile-action>
@@ -11,9 +11,13 @@
               <v-list-tile-title>{{ item.title }}</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
+
+          <v-list-tile>
+            <login></login>
+          </v-list-tile>
         </v-list>
       </v-navigation-drawer>
-      <v-toolbar dark class="primary">
+      <v-toolbar dark fixed class="primary">
         <v-toolbar-title class="white--text">Recipe App</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon>
@@ -39,14 +43,17 @@
 </template>
 
 <script>
+import Login from './components/Login';
+
 export default {
   name: 'app',
+  components: { Login },
   data () {
     return {
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', path: '/' },
-        { title: 'About', icon: 'question_answer', path: '/about' }
+        { title: 'About', icon: 'question_answer', path: '/login' }
       ],
       right: null
     }
