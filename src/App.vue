@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <login :dialogProp='dialog'></login>
+    <register :dialogProp='registerDialog'></register>
     <v-app id="example-3" standalone>
       <v-navigation-drawer permanent clipped light >
         <v-list dense class="pt-0">
@@ -19,6 +20,15 @@
             </v-list-tile-action>
             <v-list-tile-content>
               <v-list-tile-title>Login</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile @click.native= "registerDialog = true">
+            <v-list-tile-action>
+              <v-icon>fa-user-plus</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Register</v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
 
@@ -59,14 +69,16 @@
 
 <script>
 import Login from './components/Login';
+import Register from './components/Register';
 import {FBApp} from './modules/FirebaseDB';
 
 export default {
   name: 'app',
-  components: { Login },
+  components: { Login, Register },
   data () {
     return {
       dialog: false,
+      registerDialog: false,
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', path: '/' },

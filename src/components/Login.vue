@@ -53,7 +53,6 @@
         watch: {
           // whenever question changes, this function will run
           dialogProp: function (newDialog) {
-            console.log(this.dialog);
             this.dialog = this.dialogProp;
           },
           dialog: function (newDialog) {
@@ -77,19 +76,4 @@
             },
         }
     }
-    FBApp.auth().onAuthStateChanged(firebaseUser => {
-        if (firebaseUser) {
-            console.log('logged in');
-            this.dialoga = false;
-            if (firebaseUser.emailVerified != true) {
-                firebaseUser.sendEmailVerification().then(function() {
-                    console.log('send Verification');
-                }, function(error) {
-                    console.log('not send Verification');
-                });
-            }
-        } else {
-            console.log('not logged in');
-        }
-    })
 </script>
