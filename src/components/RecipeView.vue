@@ -1,31 +1,19 @@
 <template>
   <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
-    <main>
-      <div class="left-side">
-        <span class="title">
-          Welcome to your new project!
-        </span>
-      </div>
-
-      <div class="right-side">
-        <div class="doc">
-          <div class="title">Getting Started v0.0.1</div>
-          <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
-          </p>
-          <button class="btn btn-default" @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
+    <v-card v-for='recipe in recipes' class='recipe-card'>
+      <v-card-media src="http://i.imgur.com/RRUe0Mo.png" height="200px">
+      </v-card-media>
+      <v-card-title primary-title>
+        <div>
+          <h3 class="headline mb-0">{{recipe.name}}</h3>
+          <div>{{recipe.three}}</div>
         </div>
-        <div class="doc">
-          <div class="title alt">Other Documentation</div>
-          <button class="btn btn-default" @click="open('https://electron.atom.io/docs/')">Electron</button>
-          <button class="btn btn-default" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
-          <router-link to="/foo" class="btn btn-default">Go to Foo</router-link>
-        </div>
-      </div>
-    </main>
+      </v-card-title>
+      <v-card-actions>
+        <v-btn flat class="orange--text">Share</v-btn>
+        <v-btn flat class="orange--text">Explore</v-btn>
+      </v-card-actions>
+    </v-card>
   </div>
 </template>
 
@@ -36,6 +24,7 @@
     name: 'recipe-view',
     data() {
       return {
+        uid: '',
         recipes: [],
       }
     },
@@ -46,21 +35,33 @@
     },
     created() {
       const self = this;
-      var starCountRef = FBApp.database().ref('users/');
-      starCountRef.on('value', function(snapshot) {
-        snapshot.forEach(function(childSnapshot) {
-          var recipe = {
-            name: childSnapshot.key,
-            three: childSnapshot.val().three
-          }
-          self.recipes.push(recipe);
-        });
-        console.log(self.recipes);
+
+      FBApp.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          this.uid = user.uid;
+
+          var starCountRef = FBApp.database().ref('users/' + this.uid + '/recipes/');
+          starCountRef.on('value', function(snapshot) {
+            snapshot.forEach(function(childSnapshot) {
+              var recipe = {
+                name: childSnapshot.key,
+                three: childSnapshot.val().three
+              }
+              self.recipes.push(recipe);
+            });
+            console.log(self.recipes);
+          });
+        };
       });
+
+
     }
   };
 </script>
 
-<style>
-
+<style scoped>
+.recipe-card {
+  width: 500px;
+  margin-bottom: 20px;
+}
 </style>
