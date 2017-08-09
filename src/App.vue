@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <login :dialogProp='dialog'></login>
     <v-app id="example-3" standalone>
       <v-navigation-drawer permanent clipped light >
         <v-list dense class="pt-0">
@@ -12,8 +13,22 @@
             </v-list-tile-content>
           </v-list-tile>
 
-          <v-list-tile>
-            <login></login>
+          <v-list-tile @click.native= "dialog = true">
+            <v-list-tile-action>
+              <v-icon>fa-sign-in</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Login</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile @click.native= "LogOut()">
+            <v-list-tile-action>
+              <v-icon>fa-sign-out</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Logout</v-list-tile-title>
+            </v-list-tile-content>
           </v-list-tile>
         </v-list>
       </v-navigation-drawer>
@@ -44,18 +59,25 @@
 
 <script>
 import Login from './components/Login';
+import {FBApp} from './modules/FirebaseDB';
 
 export default {
   name: 'app',
   components: { Login },
   data () {
     return {
+      dialog: false,
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', path: '/' },
         { title: 'About', icon: 'question_answer', path: '/login' }
       ],
       right: null
+    }
+  },
+  methods: {
+    LogOut: function() {
+        FBApp.auth().signOut();
     }
   }
 }

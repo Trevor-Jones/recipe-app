@@ -1,11 +1,15 @@
 <template>
   <div>
     <v-layout row justify-center>
-      <v-dialog>
-        <v-btn flat block slot="activator">Open Dialog</v-btn>
+      <v-dialog v-model="dialog" persistent>
         <v-card>
           <v-card-title>
             <span class="headline">Login</span>
+
+              <v-spacer></v-spacer>
+            <v-btn fab flat small @click.native="dialog = false">
+              X
+            </v-btn>
           </v-card-title>
           <v-card-text>
             <v-text-field label="Email" v-model="authInput.txtEmail"></v-text-field>
@@ -34,13 +38,27 @@
 
     export default {
         name: 'login',
+        props: {
+          dialogProp: Boolean,
+        },
         data() {
             return {
+              dialog: false,
                 authInput: {
                     txtEmail: '',
                     txtPassword: ''
                 },
             }
+        },
+        watch: {
+          // whenever question changes, this function will run
+          dialogProp: function (newDialog) {
+            console.log(this.dialog);
+            this.dialog = this.dialogProp;
+          },
+          dialog: function (newDialog) {
+            this.$parent.dialog = this.dialog;
+          }
         },
         methods: {
             Login: function(event) {
@@ -62,6 +80,7 @@
     FBApp.auth().onAuthStateChanged(firebaseUser => {
         if (firebaseUser) {
             console.log('logged in');
+            this.dialoga = false;
             if (firebaseUser.emailVerified != true) {
                 firebaseUser.sendEmailVerification().then(function() {
                     console.log('send Verification');
