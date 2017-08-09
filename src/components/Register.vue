@@ -12,8 +12,8 @@
             </v-btn>
           </v-card-title>
           <v-card-text>
-            <v-text-field label="Email" v-model="authInput.txtEmail"></v-text-field>
-            <v-text-field label="Password" v-model="authInput.txtPassword" type="password"></v-text-field>
+            <v-text-field label="Email" v-model="authInput.txtEmail" onkeydown = "if (event.keyCode == 13)document.getElementById('registerBtn').click()"></v-text-field>
+            <v-text-field label="Password" v-model="authInput.txtPassword" type="password" onkeydown = "if (event.keyCode == 13)document.getElementById('registerBtn').click()"></v-text-field>
           </v-card-text>
 
           <v-card-actions>
@@ -21,7 +21,7 @@
             <v-btn class="red white--text" v-on:click="googleLogin()">
               Google Login
             </v-btn>
-            <v-btn primary dark v-on:click="Register()">
+            <v-btn id='registerBtn' primary dark v-on:click="Register()">
               Register
             </v-btn>
           </v-card-actions>
@@ -65,9 +65,17 @@
               const pass = this.authInput.txtPassword;
               const auth = FBApp.auth();
               const promise = auth.createUserWithEmailAndPassword(email, pass);
-              this.authInput.txtEmail = '';
-              this.authInput.txtPassword = '';
-              promise.catch(event => console.log(event.message));
+              promise.then(function(event) {
+                self.authInput.txtEmail = '';
+                self.authInput.txtPassword = '';
+              }, function(event) {
+                self.$notify({
+                  title: 'Register Error',
+                  text: event.message,
+                  type: 'error',
+                });
+                self.authInput.txtPassword = '';
+              })
           },
           googleLogin: function() {
               FBApp.auth().signInWithPopup(provider).then(function(result) {
@@ -76,19 +84,6 @@
           },
       }
   }
-  FBApp.auth().onAuthStateChanged(firebaseUser => {
-      if (firebaseUser) {
-          console.log('logged in');
-          this.dialog = false;
-          if (firebaseUser.emailVerified != true) {
-              firebaseUser.sendEmailVerification().then(function() {
-                  console.log('send Verification');
-              }, function(error) {
-                  console.log('not send Verification');
-              });
-          }
-      } else {
-          console.log('not logged in');
-      }
-  })
+
+
 </script>

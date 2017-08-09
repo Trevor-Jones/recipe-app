@@ -12,8 +12,8 @@
             </v-btn>
           </v-card-title>
           <v-card-text>
-            <v-text-field label="Email" v-model="authInput.txtEmail"></v-text-field>
-            <v-text-field label="Password" v-model="authInput.txtPassword" type="password"></v-text-field>
+            <v-text-field label="Email" v-model="authInput.txtEmail" onkeydown = "if (event.keyCode == 13)document.getElementById('loginBtn').click()"></v-text-field>
+            <v-text-field label="Password" v-model="authInput.txtPassword" type="password" onkeydown = "if (event.keyCode == 13)document.getElementById('loginBtn').click()"></v-text-field>
           </v-card-text>
 
           <v-card-actions>
@@ -21,7 +21,7 @@
             <v-btn class="red white--text" v-on:click="googleLogin()">
               Google Login
             </v-btn>
-            <v-btn primary dark v-on:click="Login()">
+            <v-btn id='loginBtn' primary dark v-on:click="Login()">
               Log in
             </v-btn>
           </v-card-actions>
@@ -61,13 +61,22 @@
         },
         methods: {
             Login: function(event) {
+                const self = this;
                 const email = this.authInput.txtEmail;
                 const pass = this.authInput.txtPassword;
                 const auth = FBApp.auth();
                 const promise = auth.signInWithEmailAndPassword(email, pass);
-                this.authInput.txtEmail = '';
-                this.authInput.txtPassword = '';
-                promise.catch(event => console.log(event.message));
+                promise.then(function(event) {
+                  self.authInput.txtEmail = '';
+                  self.authInput.txtPassword = '';
+                }, function(event) {
+                  self.$notify({
+                    title: 'Login Error',
+                    text: event.message,
+                    type: 'error',
+                  });
+                  self.authInput.txtPassword = '';
+                })
             },
             googleLogin: function() {
                 FBApp.auth().signInWithPopup(provider).then(function(result) {

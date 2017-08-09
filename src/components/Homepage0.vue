@@ -10,7 +10,7 @@
 
       <div class="right-side">
         <div class="doc">
-          <div class="title">Getting Started v0.0.1</div>
+          <div class="title">Getting Started 2 v0.0.1</div>
           <p>
             electron-vue comes packed with detailed documentation that covers everything from
             internal configurations, using the project structure, building your application,

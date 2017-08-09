@@ -1,5 +1,6 @@
 <template>
-  <div id="app">
+  <div id="app" v-cloak>
+    <notifications position='bottom right'/>
     <login :dialogProp='dialog'></login>
     <register :dialogProp='registerDialog'></register>
     <v-app id="example-3" standalone>
@@ -14,7 +15,7 @@
             </v-list-tile-content>
           </v-list-tile>
 
-          <v-list-tile @click.native= "dialog = true">
+          <v-list-tile v-if='noUserLoggedIn' @click.native= "dialog = true">
             <v-list-tile-action>
               <v-icon>fa-sign-in</v-icon>
             </v-list-tile-action>
@@ -23,7 +24,7 @@
             </v-list-tile-content>
           </v-list-tile>
 
-          <v-list-tile @click.native= "registerDialog = true">
+          <v-list-tile v-if='noUserLoggedIn' @click.native= "registerDialog = true">
             <v-list-tile-action>
               <v-icon>fa-user-plus</v-icon>
             </v-list-tile-action>
@@ -32,7 +33,7 @@
             </v-list-tile-content>
           </v-list-tile>
 
-          <v-list-tile @click.native= "LogOut()">
+          <v-list-tile v-if='!noUserLoggedIn' @click.native= "LogOut()">
             <v-list-tile-action>
               <v-icon>fa-sign-out</v-icon>
             </v-list-tile-action>
@@ -79,6 +80,7 @@ export default {
     return {
       dialog: false,
       registerDialog: false,
+      noUserLoggedIn: false,
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', path: '/' },
@@ -91,10 +93,30 @@ export default {
     LogOut: function() {
         FBApp.auth().signOut();
     }
+  },
+  created() {
+    FBApp.auth().onAuthStateChanged(firebaseUser => {
+        if (firebaseUser) {
+            this.noUserLoggedIn = false;
+            this.dialog = false;
+            this.registerDialog = false;
+            console.log('logged in');
+            if (firebaseUser.emailVerified != true) {
+                firebaseUser.sendEmailVerification().then(function() {
+                    console.log('send Verification');
+                }, function(error) {
+                    console.log('not send Verification');
+                });
+            }
+        } else {
+            this.noUserLoggedIn = true;
+            console.log('not logged in');
+        }
+    })
   }
 }
 </script>
 
 <style>
-
+  [v-cloak] {display: none}
 </style>
