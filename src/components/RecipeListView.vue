@@ -2,17 +2,17 @@
   <div id="wrapper">
     <div class="row-div" v-for="recipeRows in chunkedData">
       <v-card v-for='recipe in recipeRows' class='recipe-card'>
-        <v-card-media src="http://i.imgur.com/RRUe0Mo.png" height="200px">
+        <v-card-media :src="recipe.image" height="200px">
         </v-card-media>
         <v-card-title primary-title>
           <div>
             <h3 class="headline mb-0">{{recipe.name}}</h3>
-            <div>{{recipe.three}}</div>
+            <div>{{recipe.quickDesc}}</div>
           </div>
         </v-card-title>
         <v-card-actions>
-          <v-btn flat class="orange--text">Share</v-btn>
-          <v-btn flat class="orange--text">Explore</v-btn>
+          <v-btn flat primary>Share</v-btn>
+          <v-btn flat primary>Explore</v-btn>
         </v-card-actions>
       </v-card>
     </div>
@@ -40,16 +40,24 @@
       const self = this;
 
       FBApp.auth().onAuthStateChanged(function(user) {
+        this.recipes = [];
         if (user) {
           this.uid = user.uid;
 
           var starCountRef = FBApp.database().ref('users/' + this.uid + '/recipes/');
           starCountRef.on('value', function(snapshot) {
+            self.recipes = [];
             snapshot.forEach(function(childSnapshot) {
               var recipe = {
-                name: childSnapshot.key,
-                three: childSnapshot.val().three
-              }
+                introduction: childSnapshot.val().introduction,
+                quickDesc: childSnapshot.val().quickDesc,
+                instructions: childSnapshot.val().instructions,
+                name: childSnapshot.val().name,
+                prepTime: childSnapshot.val().prepTime,
+                cookTime: childSnapshot.val().cookTime,
+                image: childSnapshot.val().image,
+                ingredients: childSnapshot.val().ingredients,
+              };
               self.recipes.push(recipe);
             });
             console.log(self.recipes);
