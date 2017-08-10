@@ -22,17 +22,47 @@
         <v-stepper-step step="3" editable>Review and Submit</v-stepper-step>
       </v-stepper-header>
       <v-stepper-content step="1">
-        <v-card class="grey lighten-1 z-depth-1 mb-5" height="200px"></v-card>
+        <v-text-field label="Name" v-model='recipe.name'></v-text-field>
+        <v-text-field label="Description" v-model='recipe.quickDesc' hint='Short description of your recipe for displying on the card' counter max='200'></v-text-field>
+        <v-text-field label="Introduction" v-model='recipe.introduction' hint='Introduction or description to your recipe' multi-line></v-text-field>
+        <v-text-field label="Prep Time" v-model='recipe.prepTime' type='number' suffix='minutes'></v-text-field>
+        <v-text-field label="Cook Time" v-model='recipe.cookTime' type='number' suffix='minutes'></v-text-field>
         <v-btn primary @click.native="e1 = 2">Continue</v-btn>
         <v-btn flat @click.native="cancelDialog = true">Cancel</v-btn>
       </v-stepper-content>
       <v-stepper-content step="2">
-        <v-card class="grey lighten-1 z-depth-1 mb-5" height="200px"></v-card>
+        <v-text-field label="Instructions" v-model='recipe.instructions' hint='Instructions for your recipe' multi-line></v-text-field>
+        <v-btn primary dark @click.native="ingredientDialog = true">Add Ingredient</v-btn>
+        <v-layout row justify-center>
+          <v-dialog v-model="ingredientDialog" persistent>
+            <v-card>
+              <v-card-title>
+                <span class="headline">New Ingredient</span>
+              </v-card-title>
+              <v-card-text>
+                <v-text-field label="Name" v-model='newIngredient.name' onkeydown = "if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
+                <v-text-field label="Amount" v-model='newIngredient.amount' onkeydown = "if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
+                <v-text-field label="Units" v-model='newIngredient.units' onkeydown = "if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn class="blue--text darken-1" flat @click.native="ingredientDialog = false">Close</v-btn>
+                <v-btn class="blue--text darken-1" id='saveIngredientBtn' flat @click.native="saveIngredient()">Save</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-layout>
+        <v-data-table v-bind:headers="headers" :items="recipe.ingredients" hide-actions class="elevation-1 mb-3" >
+          <template slot="items" scope="props">
+            <td>{{ props.item.name }}</td>
+            <td class="text-xs-right">{{ props.item.amount }}</td>
+            <td class="text-xs-right">{{ props.item.units }}</td>
+          </template>
+        </v-data-table>
         <v-btn primary @click.native="e1 = 3">Continue</v-btn>
         <v-btn flat @click.native="cancelDialog = true">Cancel</v-btn>
       </v-stepper-content>
       <v-stepper-content step="3">
-        <v-card class="grey lighten-1 z-depth-1 mb-5" height="200px"></v-card>
         <v-btn primary>Submit</v-btn>
         <v-btn flat @click.native="cancelDialog = true">Cancel</v-btn>
       </v-stepper-content>
@@ -48,26 +78,50 @@
       return {
         e1: 0,
         cancelDialog: false,
+        ingredientDialog: false,
         recipe: {
-          description: '',
+          introduction: '',
+          quickDesc: '',
           instructions: '',
           name: '',
-          time: 5,
+          prepTime: 0,
+          cookTime: 0,
           image: '',
-          ingredients: []
-        }
+          ingredients: [],
+        },
+        newIngredient: {
+          name: '',
+          amount: '',
+          units: ''
+        },
+        headers: [
+          { text: 'Ingredient', align: 'left', value: 'name' },
+          { text: 'Amount', value: 'amount', align: 'right'},
+          { text: 'Units', value: 'units', sortable: false, align: 'right' },
+        ],
       }
     },
     methods: {
       clear() {
         this.cancelDialog = false;
         this.recipe = {
-          description: '',
+          introduction: '',
+          quickDesc: '',
           instructions: '',
           name: '',
-          time: 0,
+          prepTime: 0,
+          cookTime: 0,
           image: '',
           ingredients: []
+        };
+      },
+      saveIngredient() {
+        this.ingredientDialog = false;
+        this.recipe.ingredients.push(this.newIngredient);
+        this.newIngredient = {
+          name: '',
+          amount: '',
+          units: ''
         };
       }
     }
