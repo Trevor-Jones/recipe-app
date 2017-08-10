@@ -12,7 +12,7 @@
         </v-card-title>
         <v-card-actions>
           <v-btn flat primary>Share</v-btn>
-          <v-btn flat primary>Explore</v-btn>
+          <router-link :to="createRecipeUrl(recipe.key)"><v-btn flat primary>Explore</v-btn></router-link>
         </v-card-actions>
       </v-card>
     </div>
@@ -35,6 +35,9 @@
       open(link) {
         this.$electron.shell.openExternal(link);
       },
+      createRecipeUrl(recipeId) {
+        return '/recipe/' + this.uid + '/' + recipeId;
+      }
     },
     created() {
       const self = this;
@@ -45,6 +48,7 @@
         self.recipes = [];
         snapshot.forEach(function(childSnapshot) {
           var recipe = {
+            key: childSnapshot.key,
             introduction: childSnapshot.val().introduction,
             quickDesc: childSnapshot.val().quickDesc,
             instructions: childSnapshot.val().instructions,
@@ -85,5 +89,10 @@
     margin: 0 auto;
     padding: 10px;
     position: relative;
+  }
+
+  /* Remove underline from router-link */
+  a {
+    text-decoration: none;
   }
 </style>
