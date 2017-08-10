@@ -25,9 +25,9 @@
 
   export default {
     name: 'recipe-view',
+    props: ['uid'],
     data() {
       return {
-        uid: '',
         recipes: [],
       }
     },
@@ -39,30 +39,29 @@
     created() {
       const self = this;
 
-      FBApp.auth().onAuthStateChanged(function(user) {
-        this.recipes = [];
-        if (user) {
-          this.uid = user.uid;
-
-          var starCountRef = FBApp.database().ref('users/' + this.uid + '/recipes/');
-          starCountRef.on('value', function(snapshot) {
-            self.recipes = [];
-            snapshot.forEach(function(childSnapshot) {
-              var recipe = {
-                introduction: childSnapshot.val().introduction,
-                quickDesc: childSnapshot.val().quickDesc,
-                instructions: childSnapshot.val().instructions,
-                name: childSnapshot.val().name,
-                prepTime: childSnapshot.val().prepTime,
-                cookTime: childSnapshot.val().cookTime,
-                image: childSnapshot.val().image,
-                ingredients: childSnapshot.val().ingredients,
-              };
-              self.recipes.push(recipe);
-            });
-            console.log(self.recipes);
-          });
-        };
+      self.recipes = [];
+      var starCountRef = FBApp.database().ref('users/' + self.uid + '/recipes/');
+      starCountRef.on('value', function(snapshot) {
+        self.recipes = [];
+        snapshot.forEach(function(childSnapshot) {
+          var recipe = {
+            introduction: childSnapshot.val().introduction,
+            quickDesc: childSnapshot.val().quickDesc,
+            instructions: childSnapshot.val().instructions,
+            name: childSnapshot.val().name,
+            prepTime: childSnapshot.val().prepTime,
+            cookTime: childSnapshot.val().cookTime,
+            image: childSnapshot.val().image,
+            ingredients: childSnapshot.val().ingredients,
+          };
+          self.recipes.push(recipe);
+        });
+      }, function(event) {
+        self.$notify({
+          title: 'Auth Error',
+          text: 'I\'m sorry but you don\'t have access to this data' ,
+          type: 'error',
+        });
       });
     },
     computed: {

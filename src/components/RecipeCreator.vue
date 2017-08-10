@@ -132,7 +132,7 @@
 
         // Write the new post's data simultaneously in the posts list and the user's post list.
         var updates = {};
-        updates['/users/' + uid + '/recipes/' + newPostKey] = this.recipe;
+        updates['/users/' + uid + '/recipes/' + this.recipe.name.replace(/\s+/g, '-').toLowerCase() + newPostKey] = this.recipe;
         this.clear();
         return FBApp.database().ref().update(updates);
       }

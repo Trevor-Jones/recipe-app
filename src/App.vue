@@ -15,6 +15,15 @@
             </v-list-tile-content>
           </v-list-tile>
 
+          <v-list-tile router  :href='recipesPath'>
+            <v-list-tile-action>
+              <v-icon>fa-list</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Recipes</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
           <v-list-tile v-if='!noUserLoggedIn' router exact href='/creator'>
             <v-list-tile-action>
               <v-icon>fa-plus</v-icon>
@@ -87,13 +96,13 @@ export default {
   components: { Login, Register },
   data () {
     return {
+      uid: '',
       dialog: false,
       registerDialog: false,
       noUserLoggedIn: false,
       drawer: null,
       items: [
         { title: 'Home', icon: 'dashboard', path: '/' },
-        { title: 'About', icon: 'question_answer', path: '/recipes' }
       ],
       right: null
     }
@@ -103,9 +112,19 @@ export default {
         FBApp.auth().signOut();
     }
   },
+  computed: {
+    recipesPath() {
+      if(this.uid == '') {
+        return '/recipes'
+      } else {
+        return '/recipes/' + this.uid;
+      }
+    }
+  },
   created() {
     FBApp.auth().onAuthStateChanged(firebaseUser => {
         if (firebaseUser) {
+            this.uid = FBApp.auth().currentUser.uid;
             this.noUserLoggedIn = false;
             this.dialog = false;
             this.registerDialog = false;

@@ -5,6 +5,7 @@ import Vuetify from 'vuetify'
 import Notifications from 'vue-notification'
 import App from './App';
 import router from './router';
+import {FBApp} from './modules/FirebaseDB'
 
 
 Vue.use(Vuetify);
@@ -14,10 +15,14 @@ Vue.config.productionTip = false;
 import 'vuetify/dist/vuetify.min.css';
 import './../static/font-awesome/css/font-awesome.min.css';
 
-/* eslint-disable no-new */
-new Vue({
-  el: '#app',
-  router,
-  template: '<App/>',
-  components: { App },
+const unsubscribe = FBApp.auth().onAuthStateChanged(() => {
+  /* eslint-disable no-new */
+  new Vue({
+    el: '#app',
+    router,
+    template: '<App/>',
+    components: { App },
+  });
+
+unsubscribe();
 });

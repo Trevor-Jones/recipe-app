@@ -3,10 +3,13 @@ import Router from 'vue-router';
 import Homepage from '@/components/Homepage';
 import RecipeListView from '@/components/RecipeListView';
 import RecipeCreator from '@/components/RecipeCreator';
+import RecipeViewer from '@/components/RecipeViewer';
+import NoUserRecipeList from '@/components/NoUserRecipeList';
+import {FBApp} from './../modules/FirebaseDB';
 
 Vue.use(Router);
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [
     {
@@ -15,14 +18,38 @@ export default new Router({
       component: Homepage,
     },
     {
-      path: '/recipes',
+      path: '/recipes/:uid',
       name: 'RecipeListView',
       component: RecipeListView,
+      props: true
     },
     {
       path: '/creator',
       name: 'RecipeCreator',
       component: RecipeCreator,
     },
+    {
+      path: '/recipe/:uid/:recipeId',
+      component: RecipeViewer,
+      props: true
+    },
+    {
+      path: '/recipes',
+      component: NoUserRecipeList,
+    }
   ],
 });
+
+router.beforeEach((to, from, next) => {
+  const authRequiredPaths = ['/creator'];
+  if(to.name == 'RecipeCreator') {
+    if(FBApp.auth().currentUser != null) {
+      next()
+    } else {
+      next( '/' );
+    }
+  }
+  next();
+})
+
+export default router
