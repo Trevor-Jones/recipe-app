@@ -10,7 +10,6 @@ import {FBApp} from './../modules/FirebaseDB';
 Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
   routes: [
     {
       path: '/',
@@ -36,16 +35,20 @@ const router = new Router({
     {
       path: '/recipes',
       component: NoUserRecipeList,
-    }
+    },
+    {
+      path: '*',
+      redirect: '/',
+    },
   ],
 });
 
 router.beforeEach((to, from, next) => {
-  const authRequiredPaths = ['/creator'];
   if(to.name == 'RecipeCreator') {
     if(FBApp.auth().currentUser != null) {
       next()
     } else {
+      console.log('wowowow');
       next( '/' );
     }
   }

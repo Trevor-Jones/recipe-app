@@ -6,7 +6,7 @@
     <v-app id="example-3" standalone>
       <v-navigation-drawer permanent clipped light >
         <v-list dense class="pt-0">
-          <v-list-tile v-for="item in items" :key="item.title" router exact :href='item.path'>
+          <v-list-tile v-for="item in items" :key="item.title" router :href='item.path'>
             <v-list-tile-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-tile-action>
@@ -24,7 +24,7 @@
             </v-list-tile-content>
           </v-list-tile>
 
-          <v-list-tile v-if='!noUserLoggedIn' router exact href='/creator'>
+          <v-list-tile v-if='!noUserLoggedIn' router href='#/creator'>
             <v-list-tile-action>
               <v-icon>fa-plus</v-icon>
             </v-list-tile-action>
@@ -102,7 +102,7 @@ export default {
       noUserLoggedIn: false,
       drawer: null,
       items: [
-        { title: 'Home', icon: 'dashboard', path: '/' },
+        { title: 'Home', icon: 'dashboard', path: '#/' },
       ],
       right: null
     }
@@ -115,9 +115,9 @@ export default {
   computed: {
     recipesPath() {
       if(this.uid == '') {
-        return '/recipes'
+        return '#/recipes'
       } else {
-        return '/recipes/' + this.uid;
+        return '#/recipes/' + this.uid;
       }
     }
   },
