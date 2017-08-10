@@ -15,6 +15,15 @@
             </v-list-tile-content>
           </v-list-tile>
 
+          <v-list-tile v-if='!noUserLoggedIn' router exact href='/creator'>
+            <v-list-tile-action>
+              <v-icon>fa-plus</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Create Recipe</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
           <v-list-tile v-if='noUserLoggedIn' @click.native= "dialog = true">
             <v-list-tile-action>
               <v-icon>fa-sign-in</v-icon>
