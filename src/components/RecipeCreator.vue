@@ -40,9 +40,9 @@
                 <span class="headline">New Ingredient</span>
               </v-card-title>
               <v-card-text>
-                <v-text-field label="Name" v-model='newIngredient.name' onkeydown = "if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
-                <v-text-field label="Amount" v-model='newIngredient.amount' onkeydown = "if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
-                <v-text-field label="Units" v-model='newIngredient.units' onkeydown = "if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
+                <v-text-field label="Name" v-model='newIngredient.name' onkeydown="if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
+                <v-text-field label="Amount" v-model='newIngredient.amount' type='number' onkeydown="if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
+                <v-text-field label="Units" v-model='newIngredient.units' onkeydown="if (event.keyCode == 13)document.getElementById('saveIngredientBtn').click()"></v-text-field>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -63,7 +63,7 @@
         <v-btn flat @click.native="cancelDialog = true">Cancel</v-btn>
       </v-stepper-content>
       <v-stepper-content step="3">
-        <v-btn primary>Submit</v-btn>
+        <v-btn primary @click.native="pushToDB()">Submit</v-btn>
         <v-btn flat @click.native="cancelDialog = true">Cancel</v-btn>
       </v-stepper-content>
     </v-stepper>
@@ -71,6 +71,7 @@
 </template>
 
 <script>
+  import {FBApp} from './../modules/FirebaseDB';
 
   export default {
     name: 'recipe-creator',
@@ -123,6 +124,17 @@
           amount: '',
           units: ''
         };
+      },
+      pushToDB() {
+        const uid = FBApp.auth().currentUser.uid
+        // Get a key for a new Post.
+        var newPostKey = FBApp.database().ref().child('/users/' + uid + '/recipes/').push().key;
+
+        // Write the new post's data simultaneously in the posts list and the user's post list.
+        var updates = {};
+        updates['/users/' + uid + '/recipes/' + newPostKey] = this.recipe;
+        this.clear();
+        return FBApp.database().ref().update(updates);
       }
     }
   };
