@@ -93,7 +93,8 @@
         newIngredient: {
           name: '',
           amount: '',
-          units: ''
+          units: '',
+          checked: false
         },
         headers: [
           { text: 'Ingredient', align: 'left', value: 'name' },
@@ -122,7 +123,8 @@
         this.newIngredient = {
           name: '',
           amount: '',
-          units: ''
+          units: '',
+          checked: false
         };
       },
       pushToDB() {
