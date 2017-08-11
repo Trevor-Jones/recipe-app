@@ -38,7 +38,7 @@ const router = new Router({
     },
     {
       path: '*',
-      redirect: '/',
+      redirect: '/recipes',
     },
   ],
 });
@@ -48,11 +48,11 @@ router.beforeEach((to, from, next) => {
     if(FBApp.auth().currentUser != null) {
       next()
     } else {
-      console.log('wowowow');
       next( '/' );
     }
+  } else {
+    next();
   }
-  next();
 })
 
 export default router
