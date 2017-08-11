@@ -80,6 +80,11 @@
       <main>
         <v-container fluid>
           <router-view></router-view>
+
+            <v-footer class="pa-3" id='footer'>
+              <v-spacer></v-spacer>
+              <div>© Trevor Jones {{ new Date().getFullYear() }}</div>
+            </v-footer>
         </v-container>
       </main>
     </v-app>
@@ -147,4 +152,12 @@ export default {
 
 <style>
   [v-cloak] {display: none}
+
+  #footer {
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height:30px;
+   width:100%;
+}
 </style>

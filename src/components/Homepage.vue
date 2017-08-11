@@ -3,26 +3,8 @@
     <main>
       <div class="left-side">
         <span class="title">
-          Welcome to your new project!
+          Welcome to the recipe app! This is a work in progress
         </span>
-      </div>
-
-      <div class="right-side">
-        <div class="doc">
-          <div class="title">Getting Started v0.0.1</div>
-          <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
-          </p>
-          <button class="btn btn-default" @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
-        </div>
-        <div class="doc">
-          <div class="title alt">Other Documentation</div>
-          <button class="btn btn-default" @click="open('https://electron.atom.io/docs/')">Electron</button>
-          <button class="btn btn-default" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
-          <router-link to="/foo" class="btn btn-default">Go to Foo</router-link>
-        </div>
       </div>
     </main>
   </div>
