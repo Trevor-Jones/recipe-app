@@ -63,6 +63,7 @@
         <v-btn flat @click.native="cancelDialog = true">Cancel</v-btn>
       </v-stepper-content>
       <v-stepper-content step="3">
+        <input id="fileItem" type="file" accept="image/*">
         <v-btn primary @click.native="pushToDB()">Submit</v-btn>
         <v-btn flat @click.native="cancelDialog = true">Cancel</v-btn>
       </v-stepper-content>
@@ -128,15 +129,27 @@
         };
       },
       pushToDB() {
+        const self = this;
+        var file = document.getElementById('fileItem').files[0];
         const uid = FBApp.auth().currentUser.uid
-        // Get a key for a new Post.
-        var newPostKey = FBApp.database().ref().child('/users/' + uid + '/recipes/').push().key;
 
-        // Write the new post's data simultaneously in the posts list and the user's post list.
-        var updates = {};
-        updates['/users/' + uid + '/recipes/' + this.recipe.name.replace(/\s+/g, '-').toLowerCase() + newPostKey] = this.recipe;
-        this.clear();
-        return FBApp.database().ref().update(updates);
+        var storageRef = FBApp.storage().ref().child('/users/' + uid + '/recipePhotos/' + this.recipe.name);
+
+        // Upload file to Firebase Storage
+        var uploadTask = storageRef.put(file);
+        uploadTask.on('state_changed', null, null, function() {
+          // When the image has successfully uploaded, we get its download URL
+          self.recipe.image = uploadTask.snapshot.downloadURL
+
+          // Get a key for a new Post.
+          var newPostKey = FBApp.database().ref().child('/users/' + uid + '/recipes/').push().key;
+
+          // Write the new post's data simultaneously in the posts list and the user's post list.
+          var updates = {};
+          updates['/users/' + uid + '/recipes/' + self.recipe.name.replace(/\s+/g, '-').toLowerCase() + newPostKey] = self.recipe;
+          self.clear();
+          FBApp.database().ref().update(updates);
+        });
       }
     }
   };
