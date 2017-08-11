@@ -12,7 +12,7 @@
         </v-card-title>
         <v-card-actions>
           <v-btn flat primary>Share</v-btn>
-          <router-link :to="createRecipeUrl(recipe.key)"><v-btn flat primary>Explore</v-btn></router-link>
+          <router-link :to="createRecipeUrl(recipe.key)"><v-btn flat primary>View</v-btn></router-link>
         </v-card-actions>
       </v-card>
     </div>

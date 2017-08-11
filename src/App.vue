@@ -142,6 +142,7 @@ export default {
                 });
             }
         } else {
+            this.uid = '';
             this.noUserLoggedIn = true;
             console.log('not logged in');
         }
