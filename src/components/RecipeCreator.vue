@@ -72,11 +72,11 @@
 </template>
 
 <script>
-  import {FBApp} from './../modules/FirebaseDB';
+  import { FBApp } from './../modules/FirebaseDB';
 
   export default {
     name: 'recipe-creator',
-    data () {
+    data() {
       return {
         e1: 0,
         cancelDialog: false,
@@ -95,14 +95,14 @@
           name: '',
           amount: '',
           units: '',
-          checked: false
+          checked: false,
         },
         headers: [
           { text: 'Ingredient', align: 'left', value: 'name' },
-          { text: 'Amount', value: 'amount', align: 'right'},
+          { text: 'Amount', value: 'amount', align: 'right' },
           { text: 'Units', value: 'units', sortable: false, align: 'right' },
         ],
-      }
+      };
     },
     methods: {
       clear() {
@@ -115,7 +115,7 @@
           prepTime: 0,
           cookTime: 0,
           image: '',
-          ingredients: []
+          ingredients: [],
         };
       },
       saveIngredient() {
@@ -125,33 +125,32 @@
           name: '',
           amount: '',
           units: '',
-          checked: false
+          checked: false,
         };
       },
       pushToDB() {
         const self = this;
-        var file = document.getElementById('fileItem').files[0];
-        const uid = FBApp.auth().currentUser.uid
-
-        var storageRef = FBApp.storage().ref().child('/users/' + uid + '/recipePhotos/' + this.recipe.name);
+        const file = document.getElementById('fileItem').files[0];
+        const uid = FBApp.auth().currentUser.uid;
+        const storageRef = FBApp.storage().ref().child(`/users/${uid}/recipePhotos/${this.recipe.name}`);
 
         // Upload file to Firebase Storage
-        var uploadTask = storageRef.put(file);
-        uploadTask.on('state_changed', null, null, function() {
-          // When the image has successfully uploaded, we get its download URL
-          self.recipe.image = uploadTask.snapshot.downloadURL
-
+        const uploadTask = storageRef.put(file);
+        uploadTask.on('state_changed', null, null, () => {
           // Get a key for a new Post.
-          var newPostKey = FBApp.database().ref().child('/users/' + uid + '/recipes/').push().key;
+          const newPostKey = FBApp.database().ref().child(`/users/${uid}/recipes/`).push().key;
+          const updates = {};
+
+          // When the image has successfully uploaded, we get its download URL
+          self.recipe.image = uploadTask.snapshot.downloadURL;
 
           // Write the new post's data simultaneously in the posts list and the user's post list.
-          var updates = {};
-          updates['/users/' + uid + '/recipes/' + self.recipe.name.replace(/\s+/g, '-').toLowerCase() + newPostKey] = self.recipe;
+          updates[`/users/${uid}/recipes/${self.recipe.name.replace(/\s+/g, '-').toLowerCase()}${newPostKey}`] = self.recipe;
           self.clear();
           FBApp.database().ref().update(updates);
         });
-      }
-    }
+      },
+    },
   };
 </script>
 

@@ -46,12 +46,12 @@
 </template>
 
 <script>
-  import {FBApp} from './../modules/FirebaseDB'
+  import { FBApp } from './../modules/FirebaseDB';
 
   export default {
     name: 'recipe-viewer',
     props: ['uid', 'recipeId'],
-    data () {
+    data() {
       return {
         recipe: {
           introduction: '',
@@ -63,13 +63,12 @@
           image: '',
           ingredients: [],
         },
-      }
+      };
     },
-    created () {
+    created() {
       const self = this;
-      return FBApp.database().ref('/users/' + self.uid + '/recipes/' + self.recipeId).once('value').then(function(snapshot) {
-        console.log('reading data');
-        self.recipe = snapshot.val()
+      return FBApp.database().ref(`/users/${self.uid}/recipes/${self.recipeId}`).once('value').then((snapshot) => {
+        self.recipe = snapshot.val();
       });
     },
   };

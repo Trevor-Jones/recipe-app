@@ -21,7 +21,7 @@
             <v-btn class="red white--text" v-on:click="googleLogin()">
               Google Login
             </v-btn>
-            <v-btn id='registerBtn' primary dark v-on:click="Register()">
+            <v-btn id='registerBtn' primary dark v-on:click="register()">
               Register
             </v-btn>
           </v-card-actions>
@@ -32,58 +32,55 @@
 </template>
 
 <script>
-  import {FBApp} from './../modules/FirebaseDB';
   import * as firebase from 'firebase';
-  var provider = new firebase.auth.GoogleAuthProvider();
+  import { FBApp } from './../modules/FirebaseDB';
+
+  const provider = new firebase.auth.GoogleAuthProvider();
 
   export default {
-      name: 'register',
-      props: {
-        dialogProp: Boolean,
-      },
-      data() {
-          return {
-              dialog: false,
-              authInput: {
-                  txtEmail: '',
-                  txtPassword: ''
-              },
-          }
-      },
-      watch: {
-        // whenever question changes, this function will run
-        dialogProp: function (newDialog) {
-          this.dialog = this.dialogProp;
+    name: 'register',
+    props: {
+      dialogProp: Boolean,
+    },
+    data() {
+      return {
+        dialog: false,
+        authInput: {
+          txtEmail: '',
+          txtPassword: '',
         },
-        dialog: function (newDialog) {
-          this.$parent.registerDialog = this.dialog;
-        }
+      };
+    },
+    watch: {
+      // whenever question changes, this function will run
+      dialogProp() {
+        this.dialog = this.dialogProp;
       },
-      methods: {
-          Register: function(event) {
-              const email = this.authInput.txtEmail;
-              const pass = this.authInput.txtPassword;
-              const auth = FBApp.auth();
-              const promise = auth.createUserWithEmailAndPassword(email, pass);
-              promise.then(function(event) {
-                self.authInput.txtEmail = '';
-                self.authInput.txtPassword = '';
-              }, function(event) {
-                self.$notify({
-                  title: 'Register Error',
-                  text: event.message,
-                  type: 'error',
-                });
-                self.authInput.txtPassword = '';
-              })
-          },
-          googleLogin: function() {
-              FBApp.auth().signInWithPopup(provider).then(function(result) {
-                  console.log(result);
-              }).catch(function(error) {});
-          },
-      }
-  }
-
-
+      dialog() {
+        this.$parent.registerDialog = this.dialog;
+      },
+    },
+    methods: {
+      register() {
+        const email = this.authInput.txtEmail;
+        const pass = this.authInput.txtPassword;
+        const auth = FBApp.auth();
+        const promise = auth.createUserWithEmailAndPassword(email, pass);
+        promise.then(() => {
+          self.authInput.txtEmail = '';
+          self.authInput.txtPassword = '';
+        }, (event) => {
+          self.$notify({
+            title: 'Register Error',
+            text: event.message,
+            type: 'error',
+          });
+          self.authInput.txtPassword = '';
+        });
+      },
+      googleLogin() {
+        FBApp.auth().signInWithPopup(provider);
+      },
+    },
+  };
 </script>

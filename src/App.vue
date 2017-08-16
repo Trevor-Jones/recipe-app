@@ -51,7 +51,7 @@
             </v-list-tile-content>
           </v-list-tile>
 
-          <v-list-tile v-if='!noUserLoggedIn' @click.native= "LogOut()">
+          <v-list-tile v-if='!noUserLoggedIn' @click.native= "logOut()">
             <v-list-tile-action>
               <v-icon>fa-sign-out</v-icon>
             </v-list-tile-action>
@@ -92,63 +92,57 @@
 </template>
 
 <script>
-import Login from './components/Login';
-import Register from './components/Register';
-import {FBApp} from './modules/FirebaseDB';
+  import Login from './components/Login';
+  import Register from './components/Register';
+  import { FBApp } from './modules/FirebaseDB';
 
-export default {
-  name: 'app',
-  components: { Login, Register },
-  data () {
-    return {
-      uid: '',
-      dialog: false,
-      registerDialog: false,
-      noUserLoggedIn: false,
-      drawer: null,
-      items: [
-        { title: 'Home', icon: 'dashboard', path: '#/' },
-      ],
-      right: null
-    }
-  },
-  methods: {
-    LogOut: function() {
+  export default {
+    name: 'app',
+    components: { Login, Register },
+    data() {
+      return {
+        uid: '',
+        dialog: false,
+        registerDialog: false,
+        noUserLoggedIn: false,
+        drawer: null,
+        items: [
+          { title: 'Home', icon: 'dashboard', path: '#/' },
+        ],
+        right: null,
+      };
+    },
+    methods: {
+      logOut() {
         FBApp.auth().signOut();
-    }
-  },
-  computed: {
-    recipesPath() {
-      if(this.uid == '') {
-        return '#/recipes'
-      } else {
-        return '#/recipes/' + this.uid;
-      }
-    }
-  },
-  created() {
-    FBApp.auth().onAuthStateChanged(firebaseUser => {
-        if (firebaseUser) {
-            this.uid = FBApp.auth().currentUser.uid;
-            this.noUserLoggedIn = false;
-            this.dialog = false;
-            this.registerDialog = false;
-            console.log('logged in');
-            if (firebaseUser.emailVerified != true) {
-                firebaseUser.sendEmailVerification().then(function() {
-                    console.log('send Verification');
-                }, function(error) {
-                    console.log('not send Verification');
-                });
-            }
-        } else {
-            this.uid = '';
-            this.noUserLoggedIn = true;
-            console.log('not logged in');
+      },
+    },
+    computed: {
+      recipesPath() {
+        if (this.uid === '') {
+          return '#/recipes';
         }
-    })
-  }
-}
+
+        return `#/recipes/${this.uid}`;
+      },
+    },
+    created() {
+      FBApp.auth().onAuthStateChanged((firebaseUser) => {
+        if (firebaseUser) {
+          this.uid = FBApp.auth().currentUser.uid;
+          this.noUserLoggedIn = false;
+          this.dialog = false;
+          this.registerDialog = false;
+          if (firebaseUser.emailVerified !== true) {
+            firebaseUser.sendEmailVerification();
+          }
+        } else {
+          this.uid = '';
+          this.noUserLoggedIn = true;
+        }
+      });
+    },
+  };
 </script>
 
 <style>

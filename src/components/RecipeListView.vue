@@ -20,8 +20,9 @@
 </template>
 
 <script>
-  import {FBApp} from './../modules/FirebaseDB';
-  var chunk = require('chunk');
+  import { FBApp } from './../modules/FirebaseDB';
+
+  const chunk = require('chunk');
 
   export default {
     name: 'recipe-view',
@@ -29,25 +30,25 @@
     data() {
       return {
         recipes: [],
-      }
+      };
     },
     methods: {
       open(link) {
         this.$electron.shell.openExternal(link);
       },
       createRecipeUrl(recipeId) {
-        return '/recipe/' + this.uid + '/' + recipeId;
-      }
+        return `/recipe/${this.uid}/${recipeId}`;
+      },
     },
     created() {
       const self = this;
+      const recipesRef = FBApp.database().ref(`users/${self.uid}/recipes/`);
 
       self.recipes = [];
-      var starCountRef = FBApp.database().ref('users/' + self.uid + '/recipes/');
-      starCountRef.on('value', function(snapshot) {
+      recipesRef.on('value', (snapshot) => {
         self.recipes = [];
-        snapshot.forEach(function(childSnapshot) {
-          var recipe = {
+        snapshot.forEach((childSnapshot) => {
+          const recipe = {
             key: childSnapshot.key,
             introduction: childSnapshot.val().introduction,
             quickDesc: childSnapshot.val().quickDesc,
@@ -60,10 +61,10 @@
           };
           self.recipes.push(recipe);
         });
-      }, function(event) {
+      }, () => {
         self.$notify({
           title: 'Auth Error',
-          text: 'I\'m sorry but you don\'t have access to this data' ,
+          text: 'I\'m sorry but you don\'t have access to this data',
           type: 'error',
         });
       });

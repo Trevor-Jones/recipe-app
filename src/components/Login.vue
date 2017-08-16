@@ -21,7 +21,7 @@
             <v-btn class="red white--text" v-on:click="googleLogin()">
               Google Login
             </v-btn>
-            <v-btn id='loginBtn' primary dark v-on:click="Login()">
+            <v-btn id='loginBtn' primary dark v-on:click="login()">
               Log in
             </v-btn>
           </v-card-actions>
@@ -32,57 +32,56 @@
 </template>
 
 <script>
-    import {FBApp} from './../modules/FirebaseDB';
-    import * as firebase from 'firebase';
-    var provider = new firebase.auth.GoogleAuthProvider();
+  import * as firebase from 'firebase';
+  import { FBApp } from './../modules/FirebaseDB';
 
-    export default {
-        name: 'login',
-        props: {
-          dialogProp: Boolean,
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  export default {
+    name: 'login',
+    props: {
+      dialogProp: Boolean,
+    },
+    data() {
+      return {
+        dialog: false,
+        authInput: {
+          txtEmail: '',
+          txtPassword: '',
         },
-        data() {
-            return {
-              dialog: false,
-                authInput: {
-                    txtEmail: '',
-                    txtPassword: ''
-                },
-            }
-        },
-        watch: {
-          // whenever question changes, this function will run
-          dialogProp: function (newDialog) {
-            this.dialog = this.dialogProp;
-          },
-          dialog: function (newDialog) {
-            this.$parent.dialog = this.dialog;
-          }
-        },
-        methods: {
-            Login: function(event) {
-                const self = this;
-                const email = this.authInput.txtEmail;
-                const pass = this.authInput.txtPassword;
-                const auth = FBApp.auth();
-                const promise = auth.signInWithEmailAndPassword(email, pass);
-                promise.then(function(event) {
-                  self.authInput.txtEmail = '';
-                  self.authInput.txtPassword = '';
-                }, function(event) {
-                  self.$notify({
-                    title: 'Login Error',
-                    text: event.message,
-                    type: 'error',
-                  });
-                  self.authInput.txtPassword = '';
-                })
-            },
-            googleLogin: function() {
-                FBApp.auth().signInWithPopup(provider).then(function(result) {
-                    console.log(result);
-                }).catch(function(error) {});
-            },
-        }
-    }
+      };
+    },
+    watch: {
+      // whenever question changes, this function will run
+      dialogProp() {
+        this.dialog = this.dialogProp;
+      },
+      dialog() {
+        this.$parent.dialog = this.dialog;
+      },
+    },
+    methods: {
+      login() {
+        const self = this;
+        const email = this.authInput.txtEmail;
+        const pass = this.authInput.txtPassword;
+        const auth = FBApp.auth();
+        const promise = auth.signInWithEmailAndPassword(email, pass);
+        promise.then(() => {
+          self.authInput.txtEmail = '';
+          self.authInput.txtPassword = '';
+        }, (event) => {
+          self.$notify({
+            title: 'Login Error',
+            text: event.message,
+            type: 'error',
+          });
+          self.authInput.txtPassword = '';
+        });
+      },
+      googleLogin() {
+        FBApp.auth().signInWithPopup(provider);
+      },
+    },
+  };
 </script>
