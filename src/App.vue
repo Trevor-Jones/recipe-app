@@ -3,7 +3,7 @@
     <notifications position='bottom right'/>
     <login :dialogProp='dialog'></login>
     <register :dialogProp='registerDialog'></register>
-    <v-app id="example-3" standalone>
+    <v-app id="example-3" toolbar>
       <v-navigation-drawer permanent clipped light >
         <v-list dense class="pt-0">
           <v-list-tile v-for="item in items" :key="item.title" router :href='item.path'>
