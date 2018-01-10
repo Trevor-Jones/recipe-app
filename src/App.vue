@@ -3,8 +3,24 @@
     <notifications position='bottom right'/>
     <login :dialogProp='dialog'></login>
     <register :dialogProp='registerDialog'></register>
-    <v-app id="example-3" toolbar>
-      <v-navigation-drawer permanent clipped light >
+    <v-app id="example-3">
+      <v-toolbar dark fixed class="primary" app>
+        <v-toolbar-title class="white--text">Recipe App</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn icon>
+          <v-icon>search</v-icon>
+        </v-btn>
+        <v-btn icon>
+          <v-icon>apps</v-icon>
+        </v-btn>
+        <v-btn icon>
+          <v-icon>refresh</v-icon>
+        </v-btn>
+        <v-btn icon>
+          <v-icon>more_vert</v-icon>
+        </v-btn>
+      </v-toolbar>
+      <v-navigation-drawer permanent fixed clipped light app>
         <v-list dense class="pt-0">
           <v-list-tile v-for="item in items" :key="item.title" router :href='item.path'>
             <v-list-tile-action>
@@ -61,24 +77,8 @@
           </v-list-tile>
         </v-list>
       </v-navigation-drawer>
-      <v-toolbar dark fixed class="primary">
-        <v-toolbar-title class="white--text">Recipe App</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>search</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>apps</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>refresh</v-icon>
-        </v-btn>
-        <v-btn icon>
-          <v-icon>more_vert</v-icon>
-        </v-btn>
-      </v-toolbar>
-      <main>
-        <v-container fluid>
+      <v-content>
+        <v-container fluid fill-height>
           <router-view></router-view>
 
             <v-footer class="pa-3" id='footer'>
@@ -86,7 +86,7 @@
               <div>© Trevor Jones {{ new Date().getFullYear() }}</div>
             </v-footer>
         </v-container>
-      </main>
+      </v-content>
     </v-app>
   </div>
 </template>
