@@ -4,7 +4,7 @@
     <login :dialogProp='dialog'></login>
     <register :dialogProp='registerDialog'></register>
     <v-app id="example-3">
-      <v-toolbar dark fixed class="primary" app>
+      <v-toolbar dark fixed clipped-left class="primary" app>
         <v-toolbar-title class="white--text">Recipe App</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn icon>
@@ -20,7 +20,7 @@
           <v-icon>more_vert</v-icon>
         </v-btn>
       </v-toolbar>
-      <v-navigation-drawer permanent fixed clipped light app>
+      <v-navigation-drawer clipped light app>
         <v-list dense class="pt-0">
           <v-list-tile v-for="item in items" :key="item.title" router :href='item.path'>
             <v-list-tile-action>
